@@ -1,44 +1,62 @@
-export abstract class DioAccount { // classe abstrata pode servir como repositório para classes que tem coisas em comum 
-    private name: string
-    private readonly accountNumber: number
-    balance: number = 0
-    private status: boolean = true
+export abstract class DioAccount {
+  private readonly name: string;
+  private readonly accountNumber: number;
+  balance: number = 0;
+  private status: boolean = true;
 
+  constructor(name: string, accountNumber: number){
+    this.name = name;
+    this.accountNumber = accountNumber;
+  }
 
-    constructor(name: string, accountNumber: number) {
-        this.name = name
-        this.accountNumber = accountNumber
-        
+  // setName = (name: string): void => {
+  //   this.name = name;
+  //   console.log('Nome alterado com sucesso!');
+  // }
+
+  getName = (): string => {
+    return this.name
+  }
+
+  deposit = (valueForDeposit:  number): boolean => {
+    if(this.validateStatus()){
+      this.balance += valueForDeposit
+      return  true
     }
+    return  false
 
-    setName = (name: string): void => {
-        this.name = name
-        console.log('Nome alterado com sucesso!')
+  }
+
+  withdraw = (newBalance: number): string => {
+    if(this.validadeBalance(newBalance) && this.validateStatus()){
+      this.balance = this.balance - newBalance
+      return  `R$ ${newBalance} foi sacado da sua conta com sucesso | Novo saldo me conta: ${this.balance}`
     }
+    throw new Error('Saldo Insuficiente')
+  }
 
-    getName = (): string => {
-        return this.name
-    }
+  getBalance = (): number => {
+    return this.balance
+  }
+  private validadeBalance = (newBalance: number):  boolean => {
+    return  newBalance < this.balance ? true : false
+  }
 
-    deposit = (): void => {
-        if(this.evalidateStatus()) {
-            console.log("Voce Depositou")
-        }
-    }
+  private validateStatus = (): boolean => {
+    // if(this.status){
+    //   return true;
+    // }
+    // return false
+    return !!this.status;
+  }
 
-    withdraw = (): void => {
-        console.log('Voce sacou')
-    }
+  // metodo Loan alocado para o dioaccount para caso seja preciso usar em algum outro tipo de account
 
-    getBalance = (): void => {
-        console.log(this.balance)
-    }
+  getLoan = (newLoan: number): string => {
+    if(this.deposit(newLoan)){
+      return `novo saldo ${this.getBalance()}`
+    };
+    throw new Error('Conta com Status invalido')
+  }
 
-    private evalidateStatus = (): boolean => {
-        if (this.status) {
-            return this.status
-        }
-
-        throw new Error("Sua conta é Invalida")
-    }
 }
